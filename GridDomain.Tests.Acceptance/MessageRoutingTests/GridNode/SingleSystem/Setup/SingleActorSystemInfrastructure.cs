@@ -35,7 +35,7 @@ namespace GridDomain.Tests.Acceptance.Balance.MessageRoutingTests.GridNode.Singl
 
         protected override IActorRef CreateRoutingActor(ActorSystem system)
         {
-            return system.ActorOf(system.DI().Props<LocalSystemRoutingActor>());
+            return system.ActorOf(system.DI().Props<LocalSystemRoutingActor>(), nameof(LocalSystemRoutingActor));
         }
     }
 }

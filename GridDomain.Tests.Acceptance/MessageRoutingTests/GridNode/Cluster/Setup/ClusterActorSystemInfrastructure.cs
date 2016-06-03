@@ -24,7 +24,7 @@ namespace GridDomain.Tests.Acceptance.Balance.MessageRoutingTests.GridNode.Clust
 
         protected override IActorRef CreateRoutingActor(ActorSystem system)
         {
-            return system.ActorOf(system.DI().Props<ClusterSystemRouterActor>());
+            return system.ActorOf(system.DI().Props<ClusterSystemRouterActor>(), nameof(ClusterSystemRouterActor));
         }
 
         protected override void InitContainer(UnityContainer container, IActorRef actor)

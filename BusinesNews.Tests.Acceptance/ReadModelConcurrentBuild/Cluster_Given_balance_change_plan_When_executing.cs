@@ -14,7 +14,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
 
         protected override GridDomainNode GreateGridDomainNode(AkkaConfiguration akkaConf, IDbConfiguration dbConfig)
         {
-            _akkaCluster = ActorSystemFactory.CreateCluster(new AutoTestAkkaConfiguration(), 1, 0);
+            _akkaCluster = ActorSystemFactory.CreateCluster(new AutoTestAkkaConfiguration());
             var unityContainer = CreateUnityContainer(dbConfig);
 
             return new GridDomainNode(unityContainer,
@@ -33,7 +33,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
         }
 
         [TestFixtureTearDown]
-        public void Dispose()
+        public void Terminate()
         {
             _akkaCluster.Dispose();
         }
