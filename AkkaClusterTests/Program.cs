@@ -26,16 +26,16 @@ namespace Samples.Cluster.Simple
 
     class EchoActor : UntypedActor
     {
-        //public EchoActor(string key)
-        //{
-        //    _key = key;
-        //    _privateKey = Guid.NewGuid();
-        //  }
-        protected ILoggingAdapter Log = Context.GetLogger();
-        public EchoActor()
+        public EchoActor(string key)
         {
+            _key = key;
             _privateKey = Guid.NewGuid();
         }
+        protected ILoggingAdapter Log = Context.GetLogger();
+        //public EchoActor()
+        //{
+        //    _privateKey = Guid.NewGuid();
+        //}
 
         private readonly string _key = "default";
         private readonly Guid _privateKey;
@@ -87,7 +87,7 @@ namespace Samples.Cluster.Simple
 
             var actorSystem = systems.Last();
 
-            var pooledActorProps  = Props.Create<EchoActor>();
+            var pooledActorProps  = actorSystem.DI().Props<EchoActor>();
 
             var pooledActor = actorSystem.ActorOf(pooledActorProps);
 
