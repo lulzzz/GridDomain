@@ -13,6 +13,7 @@ using Akka.Configuration;
 using Akka.Configuration.Hocon;
 using Akka.DI.Core;
 using Akka.DI.Unity;
+using Akka.Event;
 using Akka.Routing;
 using Akka.Util.Internal;
 using Microsoft.Practices.Unity;
@@ -23,27 +24,26 @@ using Samples.Cluster.Simple.Samples.Cluster.Simple;
 namespace Samples.Cluster.Simple
 {
 
-    class EchoActor : TypedActor
+    class EchoActor : UntypedActor
     {
         //public EchoActor(string key)
         //{
         //    _key = key;
         //    _privateKey = Guid.NewGuid();
-      //  }
-
+        //  }
+        protected ILoggingAdapter Log = Context.GetLogger();
         public EchoActor()
         {
             _privateKey = Guid.NewGuid();
         }
 
-        Logger logger = LogManager.GetCurrentClassLogger();
         private readonly string _key = "default";
         private readonly Guid _privateKey;
 
-        void Handle(Echo e)
+        protected override void OnReceive(object message)
         {
-            logger.Error($"Echo from  {_privateKey} injected:{_key} payload: {e.Payload}");
-        }   
+            Log.Error($"Echo from  {_privateKey} injected:{_key} payload: {message}");
+        }
     }
 
 
@@ -87,27 +87,18 @@ namespace Samples.Cluster.Simple
 
             var actorSystem = systems.Last();
 
-
-            var localPool =
-                new ConsistentHashingPool(Environment.ProcessorCount)
-                    .WithHashMapping(m => ((Echo)m).Id);
-
-            var router = new ClusterRouterPool(localPool, new ClusterRouterPoolSettings(10, true, 2));
-
-            var actorProps = Props.Create<EchoActor>();
-
-            var pooledActorProps  = actorProps;
+            var pooledActorProps  = Props.Create<EchoActor>();
 
             var pooledActor = actorSystem.ActorOf(pooledActorProps);
 
             var transport = DistributedPubSub.Get(actorSystem).Mediator;
 
-            transport.Ask(new Subscribe("testTopic",pooledActor,"testGroup"));
+            transport.Ask(new Subscribe("testTopic",pooledActor));
 
             for (int i = 0; i < 10; i++)
                 transport.Tell(new Publish("testTopic", 
-                                           new Echo() {Id = Guid.NewGuid(), Payload = "test load " + i},
-                                           true));
+                                           new Echo() {Id = Guid.NewGuid(), Payload = "test load " + i}
+                                           ));
 
             Thread.Sleep(10000);
         }
