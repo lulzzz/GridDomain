@@ -42,7 +42,7 @@ namespace Samples.Cluster.Simple
 
         protected override void OnReceive(object message)
         {
-            Log.Error($"Echo from  {_privateKey} injected:{_key} payload: {message}");
+            Log.Warning($"Echo from  {_privateKey} injected:{_key} payload: {message}");
         }
     }
 
@@ -87,20 +87,32 @@ namespace Samples.Cluster.Simple
 
             var actorSystem = systems.Last();
 
-            var pooledActorProps  = actorSystem.DI().Props<EchoActor>();
+
+            var localPool =
+                new ConsistentHashingPool(Environment.ProcessorCount)
+                    .WithHashMapping(m => ((Echo)m).Id);
+
+            var router = new ClusterRouterPool(localPool, new ClusterRouterPoolSettings(10, true, 2));
+
+            var actorProps = actorSystem.DI().Props<EchoActor>();
+
+            var pooledActorProps = actorProps.WithRouter(router);
 
             var pooledActor = actorSystem.ActorOf(pooledActorProps);
+
 
             var transport = DistributedPubSub.Get(actorSystem).Mediator;
 
             transport.Ask(new Subscribe("testTopic",pooledActor));
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
                 transport.Tell(new Publish("testTopic", 
                                            new Echo() {Id = Guid.NewGuid(), Payload = "test load " + i}
                                            ));
 
             Thread.Sleep(10000);
+
+            Akka.Cluster.Cluster.Get(actorSystem).Shutdown();
         }
     }
 
