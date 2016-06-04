@@ -33,8 +33,8 @@ namespace GridDomain.Tests.Acceptance.Persistence
         private static void ClearWriteAkkaDb(IAkkaDbConfiguration akkaConf)
         {
             Truncate(akkaConf.SnapshotConnectionString.Replace("\\\\", "\\"), akkaConf.SnapshotTableName);
-            Truncate(akkaConf.JournalConnectionString.Replace("\\\\", "\\"), akkaConf.JournalTableName,
-                akkaConf.MetadataTableName);
+           // Truncate(akkaConf.JournalConnectionString.Replace("\\\\", "\\"), akkaConf.JournalTableName,
+            //         akkaConf.MetadataTableName);
         }
 
         private static void Truncate(string connection, params string[] tableNames)

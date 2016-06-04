@@ -1,10 +1,25 @@
 ﻿using GridDomain.Balance.Domain.AccountAggregate.Events;
 using GridDomain.CQRS.Messaging;
 using GridDomain.CQRS.ReadModel;
+using GridDomain.Logging;
 using NLog;
 
 namespace GridDomain.Balance.ReadModel
+{ 
+public class BusinessCurrentBalanceProjectionTest : IEventHandler<AccountBalanceReplenishEvent>
 {
+    private readonly Logger _logger = LogManager.GetCurrentClassLogger();
+    public void Handle(AccountCreatedEvent e)
+    {
+            _logger.Error(e.ToPropsString());
+    }
+
+    public void Handle(AccountBalanceReplenishEvent e)
+    {
+            _logger.Error("handled: " + e.ToPropsString());
+        }
+}
+
     //keep in mind 1 instance of projection builder should process only 1 account id 
     public class BusinessCurrentBalanceProjectionBuilder : IEventHandler<AccountBalanceReplenishEvent>,
         IEventHandler<AccountWithdrawalEvent>,

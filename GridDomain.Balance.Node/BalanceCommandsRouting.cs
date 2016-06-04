@@ -14,9 +14,9 @@ namespace GridDomain.Balance.Node
             //  router.Register<Account, AccountAggregateCommandsHandler>(new AccountAggregateCommandsHandler());
 
             router.Route<AccountBalanceReplenishEvent>()
-                .ToHandler<BusinessCurrentBalanceProjectionBuilder>()
-                .WithCorrelation(nameof(AccountBalanceReplenishEvent.BalanceId));
-            //  .Register();
+                .ToHandler<BusinessCurrentBalanceProjectionTest>()
+                .WithCorrelation(nameof(AccountBalanceReplenishEvent.BalanceId))
+              .Register();
 
             //router.Route<AccountCreatedEvent>()
             //    .ToHandler<BusinessCurrentBalanceProjectionBuilder>()

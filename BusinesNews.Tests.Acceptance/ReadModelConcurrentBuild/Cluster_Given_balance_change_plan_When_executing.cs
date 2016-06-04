@@ -14,7 +14,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
 
         protected override GridDomainNode GreateGridDomainNode(AkkaConfiguration akkaConf, IDbConfiguration dbConfig)
         {
-            _akkaCluster = ActorSystemFactory.CreateCluster(new AutoTestAkkaConfiguration());
+            _akkaCluster = ActorSystemFactory.CreateCluster(new AutoTestAkkaConfiguration(),1,1);
             var unityContainer = CreateUnityContainer(dbConfig);
 
             return new GridDomainNode(unityContainer,
@@ -26,8 +26,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
         ///     Important than persistence setting are the same as for testing cluster as for test ActorSystem
         /// </summary>
         public Cluster_Given_balance_change_plan_When_executing()
-            : base(AkkaConf.Copy("writeModelCheckSystem", 9000)
-                   .ToStandAloneSystemConfig())
+            : base(AkkaConf.Copy("writeModelCheckSystem", 9000).ToStandAloneSystemConfig())
         {
 
         }

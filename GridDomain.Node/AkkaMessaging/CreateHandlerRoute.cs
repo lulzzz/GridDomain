@@ -11,7 +11,7 @@ namespace GridDomain.Node.AkkaMessaging
             HandlerType = handlerType;
             MessageCorrelationProperty = messageCorrelationProperty;
 
-            Check();
+          //  Check();
         }
 
         public Type MessageType { get; }

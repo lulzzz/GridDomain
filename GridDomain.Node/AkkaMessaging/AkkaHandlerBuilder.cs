@@ -16,7 +16,8 @@ namespace GridDomain.Node.AkkaMessaging
 
         public void Register()
         {
-            _routingRegistrator.Handle(CreateHandlerRoute.New<TMessage, THandler>(CorrelationPropertyName));
+            var createHandlerRoute = CreateHandlerRoute.New<TMessage, THandler>(CorrelationPropertyName);
+            _routingRegistrator.Handle(createHandlerRoute);
         }
 
         public IHandlerBuilder<TMessage, THandler> WithCorrelation(string name)

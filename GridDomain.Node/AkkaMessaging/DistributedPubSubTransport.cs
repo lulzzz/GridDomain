@@ -34,11 +34,15 @@ namespace GridDomain.Node.AkkaMessaging
             Subscribe(typeof (TMessage), actor, actor);
         }
 
+        private object _lock = new object();
         public void Subscribe(Type messageType, IActorRef actor, IActorRef subscribeNotificationWaiter)
         {
             var topic = messageType.FullName;
-            _transport.Ask<SubscribeAck>(new Subscribe(topic, actor))
-                      .PipeTo(subscribeNotificationWaiter);
+            lock (_lock)
+            {
+                _transport.Ask<SubscribeAck>(new Subscribe(topic, actor));
+            }
+            // .PipeTo(subscribeNotificationWaiter);
 
             _log.Trace($"Subscribing handler actor {actor.Path} to topic {topic}");
         }

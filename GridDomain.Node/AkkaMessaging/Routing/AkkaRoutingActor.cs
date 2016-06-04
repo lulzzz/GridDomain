@@ -56,7 +56,7 @@ namespace GridDomain.Node.AkkaMessaging.Routing
                                                       Func<TMessage, RouterConfig> routerFactory,
                                                       string actorName = null)
         {
-            var handleActorProps = Context.System.DI().Props(actorType);
+            var handleActorProps = Props.Create(actorType);//.DI().Props(actorType);
             var routeConfig = routerFactory(msg);
             handleActorProps = handleActorProps.WithRouter(routeConfig);
 

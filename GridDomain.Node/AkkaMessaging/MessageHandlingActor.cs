@@ -10,6 +10,12 @@ namespace GridDomain.Node.AkkaMessaging
         private readonly THandler _handler;
         private readonly Logger _log = LogManager.GetCurrentClassLogger();
 
+        public MessageHandlingActor()
+        {
+          //  _handler = handler;
+            _log.Trace($"created empty message handler actor {GetType()}");
+        }
+
         public MessageHandlingActor(THandler handler)
         {
             _handler = handler;
