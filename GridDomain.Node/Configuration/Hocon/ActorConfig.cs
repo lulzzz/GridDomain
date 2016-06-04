@@ -32,14 +32,14 @@ namespace GridDomain.Node.Configuration.Hocon
                                     ""System.Object"" = wire
              }
              
-             #loggers = [""Akka.Logger.NLog.NLogLogger, Akka.Logger.NLog""]
-             #debug {
-             #      receive = on
-             #      autoreceive = on
-             #      lifecycle = on
-             #      event-stream = on
-             #      unhandled = on
-             #}
+             loggers = [""Akka.Logger.NLog.NLogLogger, Akka.Logger.NLog""]
+             debug {
+                   receive = on
+                   autoreceive = on
+                   lifecycle = on
+                   event-stream = on
+                   unhandled = on
+             }
 
        }";
 
@@ -55,8 +55,8 @@ namespace GridDomain.Node.Configuration.Hocon
             var transportString =
                 @"remote {
                     helios.tcp {
-                               #transport-class = ""Akka.Remote.Transport.Helios.HeliosTcpTransport, Akka.Remote""
-                               #transport-protocol = tcp
+                               transport-class = ""Akka.Remote.Transport.Helios.HeliosTcpTransport, Akka.Remote""
+                               transport-protocol = tcp
                                port = " + port + @"
                                hostname = " + name + @"
                     }

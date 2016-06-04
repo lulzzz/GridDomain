@@ -8,6 +8,7 @@ using GridDomain.Balance.Domain.AccountAggregate;
 using GridDomain.Balance.Domain.AccountAggregate.Commands;
 using GridDomain.Balance.Node;
 using GridDomain.Balance.ReadModel;
+using GridDomain.CQRS;
 using GridDomain.Node.AkkaMessaging;
 using GridDomain.Node.Configuration;
 using Microsoft.Practices.Unity;
@@ -29,18 +30,20 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
         {
             _balanceManipulationPlans = GivenBalancePlan(BusinessNum, ChangesPerBusiness);
             _createAccountCommands = When_executed_create_balance_commands(_balanceManipulationPlans);
-            //When_executed_change_balances(_balanceManipulationPlans);
+          //  When_executed_change_balances(_balanceManipulationPlans);
         }
 
-        private void When_executed_change_balances(IReadOnlyCollection<BalanceChangePlan> balanceManipulationPlans)
+        private CreateAccountCommand[] When_executed_create_balance_commands(
+         IReadOnlyCollection<BalanceChangePlan> accountPlans)
         {
-            var changeBalanceCommands = balanceManipulationPlans.SelectMany(p => p.BalanceChangeCommands).ToArray();
+            var createBalanceCommands = accountPlans.Select(p => p.AccountCreateCommand).ToArray();
+            ExecuteAndWaitFor<BalanceCreatedProjectedNotification>(createBalanceCommands, createBalanceCommands.Length);
+            return createBalanceCommands;
+        }
 
-            Console.WriteLine();
-            Console.WriteLine($"Totally issued {balanceManipulationPlans.Select(p => p.AccountCreateCommand).Count()}" +
-                              $" create commands and {changeBalanceCommands.Length} change commands");
-            Console.WriteLine();
-
+        private void When_executed_change_balances(IReadOnlyCollection<BalanceChangePlan> AccountPlans)
+        {
+            var changeBalanceCommands = AccountPlans.SelectMany(p => p.AccountChangeCommands).ToArray();
             ExecuteAndWaitFor<BalanceChangeProjectedNotification>(changeBalanceCommands, changeBalanceCommands.Length);
         }
         protected static IUnityContainer CreateUnityContainer(IDbConfiguration autoTestGridDomainConfiguration)
@@ -139,9 +142,9 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
             {
                 Console.WriteLine($"plan for business: {plan.businessId} with balane {plan.AccountId}");
                 Console.WriteLine(
-                    $"total change:{plan.TotalAmountChange}, with {plan.BalanceChangeCommands.Count} commands");
+                    $"total change:{plan.TotalAmountChange}, with {plan.AccountChangeCommands.Count} commands");
 
-                foreach (var cmd in plan.BalanceChangeCommands)
+                foreach (var cmd in plan.AccountChangeCommands)
                 {
                     if (cmd.BalanceId != plan.AccountId) throw new CorruptedPlanException();
                     Console.WriteLine($"{cmd.GetType().Name} {cmd.Id} with amount: {cmd.Amount}");
@@ -163,16 +166,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
             }
         }
 
-        private CreateAccountCommand[] When_executed_create_balance_commands(
-            IReadOnlyCollection<BalanceChangePlan> balanceManipulationCommands)
-        {
-            var createBalanceCommands = balanceManipulationCommands.Select(p => p.AccountCreateCommand).ToArray();
-
-            ExecuteAndWaitFor<BalanceCreatedProjectedNotification>
-                (createBalanceCommands, createBalanceCommands.Length);
-
-            return createBalanceCommands;
-        }
+     
 
         private static IReadOnlyCollection<BalanceChangePlan> GivenBalancePlan(int businessNum, int changesPerBusiness)
         {

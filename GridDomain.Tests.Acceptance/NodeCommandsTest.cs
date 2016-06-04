@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Threading;
 using Akka.Actor;
 using Akka.Cluster.Tools.PublishSubscribe;
 using Akka.TestKit.NUnit;
@@ -47,6 +49,10 @@ namespace GridDomain.Tests.Acceptance
 
         protected void ExecuteAndWaitFor<TEvent>(ICommand[] commands, int eventNumber)
         {
+            Console.WriteLine();
+            Console.WriteLine($"Totally issued {commands.Length} {commands.First().GetType().Name}");
+            Console.WriteLine();
+
             var actor = GridNode.System.ActorOf(Props.Create(() => new CountEventWaiter<TEvent>(eventNumber, TestActor)),"CountEventWaiter");
 
             _subscriber.Subscribe<TEvent>(actor);
@@ -57,7 +63,7 @@ namespace GridDomain.Tests.Acceptance
 
             Console.WriteLine();
             Console.WriteLine($"Execution finished, wait started with timeout {Timeout}");
-
+            //Thread.Sleep(5000);
             ExpectMsg<ExpectedMessagesRecieved<TEvent>>(Timeout);
 
             Console.WriteLine();

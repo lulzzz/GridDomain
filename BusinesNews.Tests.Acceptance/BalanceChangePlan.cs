@@ -7,7 +7,7 @@ namespace GridDomain.Tests.Acceptance.Balance
 {
     public class BalanceChangePlan
     {
-        public IReadOnlyCollection<ChangeAccountCommand> BalanceChangeCommands;
+        public IReadOnlyCollection<ChangeAccountCommand> AccountChangeCommands;
         public CreateAccountCommand AccountCreateCommand;
         public Guid AccountId;
         public Guid businessId;

@@ -54,7 +54,7 @@ namespace GridDomain.Tests.Acceptance.Balance
 
             return new BalanceChangePlan
             {
-                BalanceChangeCommands = changeBalanceCmds,
+                AccountChangeCommands = changeBalanceCmds,
                 AccountCreateCommand = generator.Create<CreateAccountCommand>(),
                 businessId = businessId,
                 AccountId = balanceId,
