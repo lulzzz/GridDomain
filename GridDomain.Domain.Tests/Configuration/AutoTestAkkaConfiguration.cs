@@ -6,7 +6,7 @@ namespace GridDomain.Tests.Acceptance
     {
         public AutoTestAkkaConfiguration(bool writeConfig = false,LogVerbosity verbosity = LogVerbosity.Warning)
             : base(new AutoTestAkkaNetworkAddress(),
-                    new AutoTestAkkaDbConfiguration(),
+                   new AutoTestAkkaDbConfiguration(),
                 verbosity,
                 writeConfig)
         {

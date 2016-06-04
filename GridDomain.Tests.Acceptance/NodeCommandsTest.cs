@@ -1,5 +1,6 @@
 using System;
 using Akka.Actor;
+using Akka.Cluster.Tools.PublishSubscribe;
 using Akka.TestKit.NUnit;
 using GridDomain.CQRS;
 using GridDomain.Node;
@@ -46,10 +47,9 @@ namespace GridDomain.Tests.Acceptance
 
         protected void ExecuteAndWaitFor<TEvent>(ICommand[] commands, int eventNumber)
         {
-            var actor = Sys.ActorOf(Props.Create(() => new CountEventWaiter<TEvent>(eventNumber, TestActor)),"CountEventWaiter");
+            var actor = GridNode.System.ActorOf(Props.Create(() => new CountEventWaiter<TEvent>(eventNumber, TestActor)),"CountEventWaiter");
 
             _subscriber.Subscribe<TEvent>(actor);
-
             Console.WriteLine("Starting execute");
 
             foreach (var c in commands)

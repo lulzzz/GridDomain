@@ -2,6 +2,7 @@ using System;
 using Akka.Actor;
 using Akka.Cluster.Tools.PublishSubscribe;
 using Akka.DI.Core;
+using Akka.Event;
 using Akka.Routing;
 using GridDomain.CQRS;
 using GridDomain.Logging;
@@ -13,7 +14,7 @@ namespace GridDomain.Node.AkkaMessaging.Routing
                                                          IHandler<CreateActorRoute>
     {
         private readonly IHandlerActorTypeFactory _actorTypeFactory;
-        protected readonly Logger _log = LogManager.GetCurrentClassLogger();
+        protected readonly ILoggingAdapter _log = Context.GetLogger();
         private readonly IActorSubscriber _subscriber;
 
         protected readonly RouterConfig DefaultRouter = new RandomPool(Environment.ProcessorCount);
@@ -43,7 +44,7 @@ namespace GridDomain.Node.AkkaMessaging.Routing
 
             string actorName = $"Message_handler_for_{msg.MessageType.Name}_{Guid.NewGuid()}";
             var handleActor = CreateHandleActor(msg, actorType, CreateRouter, actorName);
-            _log.Trace($"Created message handling actor for {msg.ToPropsString()}");
+            _log.Debug($"Created message handling actor for {msg.ToPropsString()}");
 
             _subscriber.Subscribe(msg.MessageType, handleActor, Self);
         }
@@ -71,7 +72,7 @@ namespace GridDomain.Node.AkkaMessaging.Routing
                 var msgType = m.GetType();
                 if (msgType != handlerRouteConfigMessage.MessageType)
                 {
-                    _log.Trace($"Bad message type. Expected:{handlerRouteConfigMessage.MessageType}, got:{msgType}");
+                    _log.Debug($"Bad message type. Expected:{handlerRouteConfigMessage.MessageType}, got:{msgType}");
                     return null;
                 }
 
@@ -80,7 +81,7 @@ namespace GridDomain.Node.AkkaMessaging.Routing
                 if (!(value is Guid))
                     throw new InvalidCorrelationPropertyValue(value);
 
-                _log.Trace($"created correlation id for message {m.GetType()}: {value}");
+                _log.Debug($"created correlation id for message {m.GetType()}: {value}");
                 return value;
             };
         }

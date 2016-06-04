@@ -180,7 +180,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorSystemFactory.cs" />
-    <Compile Include="Actors\CommandHandlerActor.cs" />
     <Compile Include="Actors\GridDomainNodeMainActor.cs" />
     <Compile Include="AkkaCluster.cs" />
     <Compile Include="AkkaMessaging\AggregateActor.cs" />

@@ -16,6 +16,8 @@ using Akka.DI.Unity;
 using Akka.Event;
 using Akka.Routing;
 using Akka.Util.Internal;
+using GridDomain.Node;
+using GridDomain.Tests.Acceptance;
 using Microsoft.Practices.Unity;
 using NLog;
 using NUnit.Framework;
@@ -60,26 +62,14 @@ namespace Samples.Cluster.Simple
 
         public static void StartUp()
         {
-            var ports = new[] {"2551", "2552", "0", "0", "0"};
-            var section = (AkkaConfigurationSection) ConfigurationManager.GetSection("akka");
             var container = new UnityContainer();
             container.RegisterInstance("key1");
-            var systems = new List<ActorSystem>();
 
-            foreach (var port in ports)
-            {
-                //Override the configuration of the port
-                var config =
-                    ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + port)
-                        .WithFallback(section.AkkaConfig);
+            var systems = ActorSystemsFromConfig(container); 
+            //var systems = ActorSystemFactory.CreateCluster(new AutoTestAkkaConfiguration()).All;
 
-                //create an Akka system
-                var system = ActorSystem.Create("ClusterSystem", config);
-                systems.Add(system);
+            foreach(var system in systems)
                 system.AddDependencyResolver(new UnityDependencyResolver(container, system));
-                //create an actor that handles cluster domain events
-                //system.ActorOf(system.DI().Props<SimpleClusterListener>());
-            }
 
             var actorSystem = systems.Last();
 
@@ -109,6 +99,30 @@ namespace Samples.Cluster.Simple
             Thread.Sleep(10000);
 
             Akka.Cluster.Cluster.Get(actorSystem).Shutdown();
+        }
+
+        private static List<ActorSystem> ActorSystemsFromConfig(UnityContainer container)
+        {
+            var ports = new[] {"2551", "2552", "0", "0", "0"};
+            var section = (AkkaConfigurationSection) ConfigurationManager.GetSection("akka");
+
+            var systems = new List<ActorSystem>();
+
+            foreach (var port in ports)
+            {
+                //Override the configuration of the port
+                var config =
+                    ConfigurationFactory.ParseString("akka.remote.helios.tcp.port=" + port)
+                        .WithFallback(section.AkkaConfig);
+
+                //create an Akka system
+                var system = ActorSystem.Create("ClusterSystem", config);
+                systems.Add(system);
+               
+                //create an actor that handles cluster domain events
+                //system.ActorOf(system.DI().Props<SimpleClusterListener>());
+            }
+            return systems;
         }
     }
 

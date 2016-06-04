@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Akka.Actor;
+using Akka.Event;
 using GridDomain.EventSourcing;
 using GridDomain.Logging;
 using NLog;
@@ -11,7 +12,7 @@ namespace GridDomain.Tests.Acceptance
     public class ExplicitSourcesEventWaiter<T> : ReceiveActor where T : ISourcedEvent
     {
         private readonly Guid[] _collection;
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly ILoggingAdapter _log = Context.GetLogger();//LogManager.GetCurrentClassLogger());
         private readonly HashSet<Guid> _set;
 
         public ExplicitSourcesEventWaiter(IActorRef notifyActor, params Guid[] sources)

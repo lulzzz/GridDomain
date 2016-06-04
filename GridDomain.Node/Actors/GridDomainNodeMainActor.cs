@@ -1,6 +1,7 @@
 ﻿using System;
 using Akka.Actor;
 using Akka.DI.Core;
+using Akka.Event;
 using GridDomain.CQRS;
 using GridDomain.CQRS.Messaging;
 using GridDomain.Logging;
@@ -11,7 +12,7 @@ namespace GridDomain.Node.Actors
 {
     public class GridDomainNodeMainActor : TypedActor
     {
-        private readonly Logger _log = LogManager.GetCurrentClassLogger();
+        private readonly ILoggingAdapter _log = Context.GetLogger();
         private readonly IPublisher _messagePublisher;
         private readonly IMessageRouteMap _messageRouting;
 
@@ -39,7 +40,7 @@ namespace GridDomain.Node.Actors
 
         public void Handle(ExecuteCommand message)
         {
-            _log.Trace($"Актор {GetType().Name} получил сообщение:\r\n {message.ToPropsString()}");
+            _log.Debug($"Актор {GetType().Name} получил сообщение:\r\n {message.ToPropsString()}");
             _messagePublisher.Publish(message.Command);
         }
 

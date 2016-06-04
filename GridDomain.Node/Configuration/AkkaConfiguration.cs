@@ -27,7 +27,7 @@ namespace GridDomain.Node.Configuration
         public AkkaConfiguration(IAkkaNetworkAddress networkConf,
             IAkkaDbConfiguration dbConf,
             LogVerbosity logLevel = LogVerbosity.Warning,
-            bool writeConfig = true)
+            bool writeConfig = false)
         {
             _writeConfig = writeConfig;
             Network = networkConf;
