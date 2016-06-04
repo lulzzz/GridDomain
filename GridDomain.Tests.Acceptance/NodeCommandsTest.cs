@@ -12,7 +12,7 @@ namespace GridDomain.Tests.Acceptance
 {
     public abstract class NodeCommandsTest : TestKit
     {
-        protected static readonly AkkaConfiguration AkkaConf = new AutoTestAkkaConfiguration();
+        protected abstract AkkaConfiguration AkkaConf { get; }
         private IActorSubscriber _subscriber;
         protected GridDomainNode GridNode;
 

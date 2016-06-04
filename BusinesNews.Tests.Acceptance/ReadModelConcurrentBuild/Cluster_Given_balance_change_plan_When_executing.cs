@@ -11,6 +11,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
     public class Cluster_Given_balance_change_plan_When_executing : Given_balance_change_plan_When_executing
     {
         private AkkaCluster _akkaCluster;
+        protected override AkkaConfiguration AkkaConf => new AutoTestAkkaConfiguration();
 
         protected override GridDomainNode GreateGridDomainNode(AkkaConfiguration akkaConf, IDbConfiguration dbConfig)
         {
@@ -26,7 +27,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
         ///     Important than persistence setting are the same as for testing cluster as for test ActorSystem
         /// </summary>
         public Cluster_Given_balance_change_plan_When_executing()
-            : base(AkkaConf.Copy("writeModelCheckSystem", 9000).ToStandAloneSystemConfig())
+            : base(new AutoTestAkkaConfiguration().Copy("writeModelCheckSystem", 9000).ToStandAloneSystemConfig())
         {
 
         }
@@ -37,7 +38,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
             _akkaCluster.Dispose();
         }
 
-        protected override TimeSpan Timeout => TimeSpan.FromSeconds(10);
+        protected override TimeSpan Timeout => TimeSpan.FromSeconds(5);
         protected override int BusinessNum => 1;
         protected override int ChangesPerBusiness => 1;
     }

@@ -53,7 +53,7 @@ namespace GridDomain.Node.AkkaMessaging.Routing
         public void Handle(SubscribeAck msg)
         {
             _subscriptionWaiter?.Tell(msg);
-            _log.Trace($"Subscription was successfull for topic {msg.Subscribe.Topic} group {msg.Subscribe.Group} path {msg.Subscribe.Ref.Path}");
+            _log.Debug($"Subscription was successfull for topic {msg.Subscribe.Topic} group {msg.Subscribe.Group} path {msg.Subscribe.Ref.Path}");
         }
 
 

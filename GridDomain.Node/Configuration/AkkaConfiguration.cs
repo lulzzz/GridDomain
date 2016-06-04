@@ -22,11 +22,14 @@ namespace GridDomain.Node.Configuration
         };
 
         private readonly LogVerbosity _logLevel;
+        private readonly bool _writeConfig;
 
         public AkkaConfiguration(IAkkaNetworkAddress networkConf,
             IAkkaDbConfiguration dbConf,
-            LogVerbosity logLevel = LogVerbosity.Warning)
+            LogVerbosity logLevel = LogVerbosity.Warning,
+            bool writeConfig = true)
         {
+            _writeConfig = writeConfig;
             Network = networkConf;
             Persistence = dbConf;
             _logLevel = logLevel;
@@ -55,7 +58,7 @@ namespace GridDomain.Node.Configuration
         public string ToClusterSeedNodeSystemConfig(params IAkkaNetworkAddress[] otherSeeds)
         {
             var cfg = new RootConfig(
-                new LogConfig(this, false),
+                new LogConfig(this, _writeConfig),
                 ClusterConfig.SeedNode(Network, otherSeeds),
                 new PersistenceConfig(this));
             return cfg.Build();
@@ -65,7 +68,7 @@ namespace GridDomain.Node.Configuration
         public string ToStandAloneSystemConfig()
         {
             var cfg = new RootConfig(
-                new LogConfig(this, false),
+                new LogConfig(this, _writeConfig),
                 new StandAloneConfig(Network),
                 new PersistenceConfig(this));
             return cfg.Build();
@@ -75,7 +78,7 @@ namespace GridDomain.Node.Configuration
         public string ToClusterNonSeedNodeSystemConfig(params IAkkaNetworkAddress[] seeds)
         {
             var cfg = new RootConfig(
-                new LogConfig(this,false),
+                new LogConfig(this, _writeConfig),
                 ClusterConfig.NonSeedNode(Network, seeds),
                 new PersistenceConfig(this));
             return cfg.Build();

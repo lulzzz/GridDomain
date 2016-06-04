@@ -32,10 +32,6 @@ namespace Samples.Cluster.Simple
             _privateKey = Guid.NewGuid();
         }
         protected ILoggingAdapter Log = Context.GetLogger();
-        //public EchoActor()
-        //{
-        //    _privateKey = Guid.NewGuid();
-        //}
 
         private readonly string _key = "default";
         private readonly Guid _privateKey;

@@ -22,8 +22,8 @@ namespace GridDomain.Node.Configuration.Hocon
         {
             var actorConfig = @"   
        actor {
-			 serialize-messages = on
-             serialize-creators = on
+			 #serialize-messages = on
+             #serialize-creators = on
              serializers {
                          wire = ""Akka.Serialization.WireSerializer, Akka.Serialization.Wire""
              }
