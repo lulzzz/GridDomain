@@ -26,12 +26,17 @@ namespace GridDomain.Node.Configuration.Hocon
              #serialize-creators = on
              serializers {
                          wire = ""Akka.Serialization.WireSerializer, Akka.Serialization.Wire""
+                         unity= ""GridDomain.Node.AkkaMessaging.Routing.UnityDependencyResolverSerializer, GridDomain.Node""
              }
              
              serialization-bindings {
-                                    ""System.Object"" = wire
+                                   ""Akka.DI.Unity.UnityDependencyResolver, Akka.DI.Unity"" = unity
+                                   ""System.Object"" = wire
+
+
              }
              
+
              loggers = [""Akka.Logger.NLog.NLogLogger, Akka.Logger.NLog""]
              debug {
                    receive = on
@@ -44,7 +49,7 @@ namespace GridDomain.Node.Configuration.Hocon
        }";
 
             var deploy = BuildActorProvider() + BuildTransport(_host, _port);
-
+              //  Wire.Surrogate<>
             return actorConfig + Environment.NewLine + deploy;
         }
 

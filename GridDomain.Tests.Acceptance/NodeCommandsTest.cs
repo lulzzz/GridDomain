@@ -53,7 +53,8 @@ namespace GridDomain.Tests.Acceptance
             Console.WriteLine($"Totally issued {commands.Length} {commands.First().GetType().Name}");
             Console.WriteLine();
 
-            var actor = GridNode.System.ActorOf(Props.Create(() => new CountEventWaiter<TEvent>(eventNumber, TestActor)),"CountEventWaiter");
+            var actor = GridNode.System.ActorOf(Props.Create(() => new CountEventWaiter<TEvent>(eventNumber, TestActor)),
+                "CountEventWaiter_for_"+typeof(TEvent).Name);
 
             _subscriber.Subscribe<TEvent>(actor);
             Console.WriteLine("Starting execute");
@@ -63,7 +64,7 @@ namespace GridDomain.Tests.Acceptance
 
             Console.WriteLine();
             Console.WriteLine($"Execution finished, wait started with timeout {Timeout}");
-            //Thread.Sleep(5000);
+
             ExpectMsg<ExpectedMessagesRecieved<TEvent>>(Timeout);
 
             Console.WriteLine();

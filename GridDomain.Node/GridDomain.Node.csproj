@@ -195,6 +195,7 @@
     <Compile Include="AkkaMessaging\MessageRoute.cs" />
     <Compile Include="AkkaMessaging\Routing\ClusterSystemRouterActor.cs" />
     <Compile Include="AkkaMessaging\Routing\LocalSystemRoutingActor.cs" />
+    <Compile Include="AkkaMessaging\Routing\UnityDependencyResolverSerializer.cs" />
     <Compile Include="AkkaMessaging\TypedMessageActor.cs" />
     <Compile Include="AkkaMessaging\AkkaHandlerBuilder.cs" />
     <Compile Include="AkkaMessaging\Routing\AkkaRouteBuilder.cs" />

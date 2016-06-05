@@ -70,6 +70,7 @@ namespace GridDomain.Node
                                  System,
                                  databaseConfiguration,
                                  _transportMode);
+            UnityDependencyResolverSerializer.Container = Container;
 
             StartMainNodeActor(System);
         }

@@ -26,16 +26,16 @@ using Samples.Cluster.Simple.Samples.Cluster.Simple;
 namespace Samples.Cluster.Simple
 {
 
-    class EchoActor : UntypedActor
+    class EchoActor<T> : UntypedActor
     {
-        public EchoActor(string key)
+        public EchoActor(T key)
         {
             _key = key;
             _privateKey = Guid.NewGuid();
         }
         protected ILoggingAdapter Log = Context.GetLogger();
 
-        private readonly string _key = "default";
+        private readonly T _key;//= "default";
         private readonly Guid _privateKey;
 
         protected override void OnReceive(object message)
@@ -80,12 +80,11 @@ namespace Samples.Cluster.Simple
 
             var router = new ClusterRouterPool(localPool, new ClusterRouterPoolSettings(10, true, 2));
 
-            var actorProps = actorSystem.DI().Props<EchoActor>();
+            var actorProps = actorSystem.DI().Props<EchoActor<string>>();
 
             var pooledActorProps = actorProps.WithRouter(router);
 
             var pooledActor = actorSystem.ActorOf(pooledActorProps);
-
 
             var transport = DistributedPubSub.Get(actorSystem).Mediator;
 

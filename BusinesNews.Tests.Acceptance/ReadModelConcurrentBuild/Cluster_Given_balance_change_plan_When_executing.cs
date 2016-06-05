@@ -40,7 +40,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
             _akkaCluster.Dispose();
         }
 
-        protected override TimeSpan Timeout => TimeSpan.FromSeconds(10);
+        protected override TimeSpan Timeout => TimeSpan.FromSeconds(100);
         protected override int BusinessNum => 1;
         protected override int ChangesPerBusiness => 1;
     }

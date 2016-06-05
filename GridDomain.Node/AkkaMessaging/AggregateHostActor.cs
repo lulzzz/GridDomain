@@ -16,7 +16,8 @@ namespace GridDomain.Node.AkkaMessaging
         private readonly ICommandAggregateLocator<TAggregate> _locator;
         private readonly Type _actorType;
 
-        public AggregateHostActor(ICommandAggregateLocator<TAggregate> locator, IAggregateActorLocator actorLocator)
+        public AggregateHostActor(ICommandAggregateLocator<TAggregate> locator, 
+                                  IAggregateActorLocator actorLocator)
         {
             _actorLocator = actorLocator;
             _locator = locator;

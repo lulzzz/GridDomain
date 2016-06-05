@@ -30,7 +30,7 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
         {
             _balanceManipulationPlans = GivenBalancePlan(BusinessNum, ChangesPerBusiness);
             _createAccountCommands = When_executed_create_balance_commands(_balanceManipulationPlans);
-          //  When_executed_change_balances(_balanceManipulationPlans);
+            When_executed_change_balances(_balanceManipulationPlans);
         }
 
         private CreateAccountCommand[] When_executed_create_balance_commands(
@@ -76,7 +76,8 @@ namespace GridDomain.Tests.Acceptance.Balance.ReadModelConcurrentBuild
 
         private void CheckWriteModel(IReadOnlyCollection<BalanceChangePlan> balanceManipulationPlans)
         {
-           Sys.AddDependencyResolver(new UnityDependencyResolver(GridNode.Container, Sys));
+
+            Sys.AddDependencyResolver(new UnityDependencyResolver(GridNode.Container, Sys));
             var props = Sys.DI().Props<AggregateActor<Account>>();
 
 
