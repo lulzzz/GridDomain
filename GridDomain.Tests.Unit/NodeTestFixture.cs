@@ -41,8 +41,8 @@ namespace GridDomain.Tests.Unit
         }
 
         public GridDomainNode Node { get; private set; }
-
-        public ActorSystem System { get; set; }
+        //for setting it from testKit
+        public ActorSystem System { private get; set; }
         public ILogger Logger { get; private set; }
         public AkkaConfiguration AkkaConfig { get; set; } = DefaultAkkaConfig;
         private bool ClearDataOnStart => !InMemory;
@@ -82,9 +82,6 @@ namespace GridDomain.Tests.Unit
             if (ClearDataOnStart)
                 await TestDbTools.ClearData(DefaultAkkaConfig.Persistence);
 
-            System = System ?? ActorSystem.Create(Name, GetConfig());
-            await CreateLogger();
-
             var settings = CreateNodeSettings();
 
             Node = new GridDomainNode(settings);
@@ -97,27 +94,31 @@ namespace GridDomain.Tests.Unit
 
         protected virtual NodeSettings CreateNodeSettings()
         {
-            var settings = new NodeSettings(() => new[] { System })
-                           {
-                               QuartzConfig = InMemory ? (IQuartzConfig) new InMemoryQuartzConfig() : new PersistedQuartzConfig(),
-                               DefaultTimeout = DefaultTimeout,
-                               Log = Logger,
-                               CustomContainerConfiguration = new ContainerConfiguration(_containerConfigurations.ToArray())
-                           };
+            var settings = new NodeSettings(() => CreateSystem().Result);
 
+            settings.QuartzConfig = InMemory ? (IQuartzConfig) new InMemoryQuartzConfig() : new PersistedQuartzConfig();
+            settings.DefaultTimeout = DefaultTimeout;
+            settings.Log = Logger;
+            settings.CustomContainerConfiguration = new ContainerConfiguration(_containerConfigurations.ToArray());
             settings.DomainBuilder.Register(_domainConfigurations);
 
             return settings;
         }
 
-        private async Task CreateLogger()
+        private async Task<ActorSystem> CreateSystem()
+        {
+            System = System ?? ActorSystem.Create(Name, GetConfig());
+            await CreateLogger((ExtendedActorSystem) System);
+            return System;
+        }
+
+        private async Task CreateLogger(ExtendedActorSystem actorSystem)
         {
             Logger = CreateLoggerConfiguration(Output).CreateLogger();
 
-            var extSystem = (ExtendedActorSystem) System;
-            var logActor = extSystem.SystemActorOf(Props.Create(() => new SerilogLoggerActor(Logger)), "node-log-test");
+            var logActor = actorSystem.SystemActorOf(Props.Create(() => new SerilogLoggerActor(Logger)), "node-log-test");
 
-            await logActor.Ask<LoggerInitialized>(new InitializeLogger(System.EventStream));
+            await logActor.Ask<LoggerInitialized>(new InitializeLogger(actorSystem.EventStream));
         }
 
         public event EventHandler OnNodeStartedEvent = delegate { };

@@ -11,16 +11,16 @@ namespace GridDomain.Node
 {
     public class NodeSettings
     {
-        public NodeSettings(Func<ActorSystem[]> actorSystemFactory = null)
+        public NodeSettings(Func<ActorSystem> actorSystemFactory)
         {
-            ActorSystemFactory = actorSystemFactory ?? ActorSystemFactory;
+            ActorSystemFactory = actorSystemFactory;
         }
 
         public IDomainBuilder DomainBuilder => Builder;
 
         internal readonly DomainBuilder Builder = new DomainBuilder();
         public IContainerConfiguration CustomContainerConfiguration { get; set; } = new EmptyContainerConfiguration();
-        public Func<ActorSystem[]> ActorSystemFactory { get; } = () => new[] {ActorSystem.Create("defaultSystem")};
+        public Func<ActorSystem> ActorSystemFactory { get; }
 
         public ILogger Log { get; set; } = new DefaultLoggerConfiguration().CreateLogger().ForContext<GridDomainNode>();
 

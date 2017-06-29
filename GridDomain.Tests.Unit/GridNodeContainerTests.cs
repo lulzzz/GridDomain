@@ -1,3 +1,4 @@
+using GridDomain.CQRS.Messaging.Akka;
 using GridDomain.Node;
 using GridDomain.Node.Configuration.Composition;
 using GridDomain.Node.Configuration.Persistence;
@@ -19,9 +20,9 @@ namespace GridDomain.Tests.Unit
         protected override IUnityContainer CreateContainer(TransportMode mode, IDbConfiguration conf)
         {
             var container = new UnityContainer();
-
+            
             var actorSystem = ActorSystemBuilders[mode]();
-            container.Register(new GridNodeContainerConfiguration(actorSystem, mode, new NodeSettings()));
+            container.Register(new GridNodeContainerConfiguration(actorSystem, new NodeSettings(null), new LocalAkkaEventBusTransport(actorSystem)));
             actorSystem.Terminate();
             return container;
         }
