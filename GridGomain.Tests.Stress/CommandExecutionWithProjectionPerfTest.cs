@@ -21,6 +21,9 @@ namespace GridGomain.Tests.Stress
         private readonly DbContextOptions<BalloonContext> _dbContextOptions;
         private NodeTestFixture Fixture { get; }
 
+        public CommandExecutionWithProjectionPerfTest() { }
+
+
         public CommandExecutionWithProjectionPerfTest(ITestOutputHelper output)
         {
             Trace.Listeners.Clear();

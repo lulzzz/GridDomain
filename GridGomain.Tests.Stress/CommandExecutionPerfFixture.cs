@@ -28,6 +28,7 @@ namespace GridGomain.Tests.Stress
     {
         private Counter _counter;
         private NodeTestFixture Fixture { get; }
+        public CommandExecutionPerfFixture() { }
 
         public CommandExecutionPerfFixture(ITestOutputHelper output)
         {
