@@ -30,7 +30,7 @@ namespace GridDomain.Node.Configuration.Akka.Hocon
 
 #if DEBUG
             messageSerialization = @"  serialize-messages = on
-                                       serialize-creators = on";
+                                       #serialize-creators = on";
 #endif
             var actorConfig = @"   
        actor {
@@ -46,7 +46,7 @@ namespace GridDomain.Node.Configuration.Akka.Hocon
                                    """ + typeof(IMemento).AssemblyQualifiedShortName() + @"""    = json
                                   # for local snapshots storage
                                    ""Akka.Persistence.Serialization.Snapshot, Akka.Persistence"" = json
-                                   ""System.Object"" = wireDebug
+                                   ""System.Object"" = wire
 
              }
        }";
