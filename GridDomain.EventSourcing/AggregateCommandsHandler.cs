@@ -33,51 +33,46 @@ namespace GridDomain.EventSourcing
 
         protected void Map<TCommand>(Func<TCommand, TAggregate, Task> commandExecutor) where TCommand : ICommand
         {
-            Add<TCommand>(async (a, c, p) =>
+            Add<TCommand>( (a, c, p) =>
                           {
-                              await commandExecutor((TCommand)c, a);
-                              return a;
+                              return commandExecutor((TCommand) c, a)
+                                            .ContinueWith(t => p(a), TaskContinuationOptions.OnlyOnRanToCompletion)
+                                            .ContinueWith(t => a);
+                              
                           });
-        }
-
-        private void Map<TCommand>(Func<TCommand, TAggregate, TAggregate> commandExecutor) where TCommand : ICommand
-        {
-            Add<TCommand>((a, c, p) =>
-            {
-                try
-                {
-                    return Task.FromResult(commandExecutor((TCommand)c, a));
-                }
-                catch (Exception ex)
-                {
-                    return Task.FromException<TAggregate>(ex);
-                }
-            });
         }
 
         public void Map<TCommand>(Action<TCommand, TAggregate> commandExecutor) where TCommand : ICommand
         {
-            Map((Func<TCommand, TAggregate, TAggregate>)((c, a) =>
-                                                         {
-                                                             commandExecutor(c, a);
-                                                             return a;
-                                                         }));
+            Add<TCommand>((a, c, p) =>  {
+                               try
+                               {
+                                   commandExecutor((TCommand) c, a);
+
+                                   return p(a).ContinueWith(t => a);
+                               }
+                               catch(Exception ex)
+                               {
+                                   return Task.FromException<TAggregate>(ex);
+                               }
+                           });
         }
 
-        /// <summary>
-        /// Special case for constructors - we should invoke persist externally, due to events 
-        /// are raised in constructor when aggregate persist delegate is not set yet
-        /// </summary>
-        /// <typeparam name="TCommand"></typeparam>
-        /// <param name="commandExecutor"></param>
+        
         protected void Map<TCommand>(Func<TCommand, TAggregate> commandExecutor) where TCommand : ICommand
         {
-            Add<TCommand>(async (a, c, p) =>
+            Add<TCommand>((a, c, p) =>
                           {
-                              var agr = commandExecutor((TCommand)c);
-                              agr.Persist = p;
-                              await p(agr);
-                              return agr;
+                              try
+                              {
+                                  var agr = commandExecutor((TCommand)c);
+                                  agr.Persist = p;
+                                  return p(agr).ContinueWith(t => agr);
+                              }
+                              catch(Exception ex)
+                              {
+                                  return Task.FromException<TAggregate>(ex);
+                              }
                           });
         }
     }

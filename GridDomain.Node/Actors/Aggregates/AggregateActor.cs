@@ -64,7 +64,7 @@ namespace GridDomain.Node.Actors.Aggregates
                                                            _aggregateCommandsHandler.ExecuteAsync(State, 
                                                                                                   cmd,
                                                                                                   PersistEventPack(Self))
-                                                                                    .ContinueWith(t => ProducedEventsPersisted.Instance)
+                                                                                    .ContinueWith(t => CommandHandlerFinished.Instance)
                                                                                     .PipeTo(Self);
 
                                                            Behavior.Become(ProcessingCommandBehavior, nameof(ProcessingCommandBehavior));
@@ -75,6 +75,7 @@ namespace GridDomain.Node.Actors.Aggregates
         {
             return agr =>
                    {
+                       if (!agr.HasUncommitedEvents) return Task.CompletedTask;
                        ExecutionContext.ProducedState = (TAggregate)agr;
                        return self.Ask<EventsPersisted>(new PersistEvents(agr.GetDomainEvents()));
                    };
@@ -101,8 +102,10 @@ namespace GridDomain.Node.Actors.Aggregates
                                        if (!domainEvents.Any())
                                        {
                                            Log.Warning("Aggregate {id} is saving zero events", PersistenceId);
+                                           Sender.Tell(EventsPersisted.Instance);
                                        }
 
+                                       int eventsToPersist = domainEvents.Length;
                                        PersistAll(domainEvents,
                                            persistedEvent =>
                                            {
@@ -124,23 +127,20 @@ namespace GridDomain.Node.Actors.Aggregates
                                                NotifyPersistenceWatchers(persistedEvent);
                                                TrySaveSnapshot(ExecutionContext.ProducedState);
 
-                                               if (State.HasUncommitedEvents)
-                                                   return;
-
-                                               Sender.Tell(EventsPersisted.Instance);
+                                               if (--eventsToPersist == 0)
+                                                 Sender.Tell(EventsPersisted.Instance);
                                            });
                                    });
             //aggregate raised an error during command execution
             Command<Status.Failure>(f => PublishError(ExecutionContext.Command, commandMetadata, f.Cause).PipeTo(Self));
 
-            Command<ProducedEventsPersisted>(newState =>
+            Command<CommandHandlerFinished>(newState =>
                                              {
                                                  Log.Debug("{Aggregate} received a {@command}", PersistenceId, newState);
 
                                                  ExecutionContext.MessagesToProject
-                                                                 .Select(e => Project(e, producedEventsMetadata)).
-                                                                  ToChain().
-                                                                  ContinueWith(t =>
+                                                                 .Select(e => Project(e, producedEventsMetadata))
+                                                                 .ToChain().ContinueWith(t =>
                                                                                {
                                                                                    //Publish produced messages
                                                                                    foreach (var e in ExecutionContext.MessagesToProject)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GridDomain.EventSourcing;
 using GridDomain.EventSourcing.CommonDomain;
 using GridDomain.Scheduling.FutureEvents;
@@ -31,13 +32,18 @@ namespace GridDomain.Scheduling
             var futureEventOccuredEvent = new FutureEventOccuredEvent(futureEventOccuredEventId, futureEventId, Id);
 
             //How to handle case when applying occured event will raise an exception?
-             Emit(ev.Event,
+             Produce(ev.Event,
                   futureEventOccuredEvent);
         }
 
-        protected void Emit(DomainEvent @event, DateTime raiseTime, Guid? futureEventId = null)
+        protected async Task Emit(DomainEvent @event, DateTime raiseTime, Guid? futureEventId = null)
         {
-             Emit(new FutureEventScheduledEvent(futureEventId ?? Guid.NewGuid(), Id, raiseTime, @event, _schedulingSourceName));
+             await Emit(new FutureEventScheduledEvent(futureEventId ?? Guid.NewGuid(), Id, raiseTime, @event, _schedulingSourceName));
+        }
+
+        protected void Raise(DomainEvent @event, DateTime raiseTime, Guid? futureEventId = null)
+        {
+            Produce(new FutureEventScheduledEvent(futureEventId ?? Guid.NewGuid(), Id, raiseTime, @event, _schedulingSourceName));
         }
 
         protected void CancelScheduledEvents<TEvent>(Predicate<TEvent> criteia = null) where TEvent : DomainEvent
@@ -49,7 +55,7 @@ namespace GridDomain.Scheduling
             var domainEvents = eventsToCancel.Select(e => new FutureEventCanceledEvent(e.Id, Id, _schedulingSourceName))
                                              .Cast<DomainEvent>()
                                              .ToArray();
-            Emit(domainEvents);
+            Produce(domainEvents);
         }
 
         private void Apply(FutureEventScheduledEvent e)

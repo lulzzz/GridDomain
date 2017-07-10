@@ -28,9 +28,10 @@ namespace GridDomain.Tests.Unit.CommandsExecution
             _result =
                 await
                     Node.Prepare(cmd)
-                        .Expect<BalloonTitleChanged>(e => e.SourceId == cmd.AggregateId)
-                        .And<BalloonCreated>(e => e.SourceId == cmd.AggregateId)
+                        .Expect<BalloonTitleChanged>()
+                        .And<BalloonCreated>()
                         .Execute();
+
             //Then_recieve_something()
             Assert.NotNull(_result);
             //Then_recieve_non_empty_collection()

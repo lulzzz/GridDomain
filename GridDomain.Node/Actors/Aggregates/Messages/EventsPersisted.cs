@@ -1,10 +1,10 @@
 namespace GridDomain.Node.Actors.Aggregates.Messages {
-    public class ProducedEventsPersisted
+    public class CommandHandlerFinished
     {
-        private ProducedEventsPersisted()
+        private CommandHandlerFinished()
         {
             
         }
-        public static ProducedEventsPersisted Instance { get; } = new ProducedEventsPersisted();
+        public static CommandHandlerFinished Instance { get; } = new CommandHandlerFinished();
     }
 }

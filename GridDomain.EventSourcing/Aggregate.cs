@@ -22,7 +22,6 @@ namespace GridDomain.EventSourcing
         public bool HasUncommitedEvents => _uncommittedEvents.Any();
         private IRouteEvents _registeredRoutes;
         public PersistenceDelegate Persist { get; set; }
-
         protected Aggregate(Guid id) : this(null)
         {
             Id = id;
@@ -96,7 +95,7 @@ namespace GridDomain.EventSourcing
 
         protected async Task Emit<T>(Task<T> evtTask) where T : DomainEvent
         {
-            await EmitAsync(await evtTask);
+            await Emit(await evtTask);
         }
 
         public bool MarkPersisted(DomainEvent e)
@@ -107,22 +106,33 @@ namespace GridDomain.EventSourcing
             return _uncommittedEvents.Remove(e);
         }
 
-        protected async Task EmitAsync(params DomainEvent[] events)
+        /// <summary>
+        /// Produce events and initiate persistence
+        /// </summary>
+        /// <param name="events"></param>
+        /// <returns></returns>
+        protected async Task Emit(params DomainEvent[] events)
         {
-            foreach (var e in events)
-            {
-                _uncommittedEvents.Add(e);
-            }
+            Produce(events);
 
+            //pass aggregate and not events for cases when we create new aggregates and need reference to it
             await Persist(this);
         }
 
-        protected void Emit(params DomainEvent[] events)
+        /// <summary>
+        /// Add events to uncommited, it will be persisted and applied after end of aggregate method
+        /// </summary>
+        /// <param name="events"></param>
+        protected void Produce(params DomainEvent[] events)
         {
-            EmitAsync(events);
+            foreach(var e in events)
+            {
+                _uncommittedEvents.Add(e);
+            }
         }
+
         public override int GetHashCode()
-        {
+        { 
             return Id.GetHashCode();
         }
 
