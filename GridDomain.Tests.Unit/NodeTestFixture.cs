@@ -61,13 +61,13 @@ namespace GridDomain.Tests.Unit
 
         public void Add(IDomainConfiguration config)
         {
-            _domainConfigurations.Add(config);
+            Add(config);
         }
         public void Add(IContainerConfiguration config)
         {
             _containerConfigurations.Add(config);
         }
-
+      
         public virtual async Task<GridDomainNode> CreateNode()
         {
             Logger = new XUnitAutoTestLoggerConfiguration(Output, LogLevel).CreateLogger();
@@ -89,10 +89,11 @@ namespace GridDomain.Tests.Unit
                                QuartzConfig = new InMemoryQuartzConfig(),
                                DefaultTimeout = DefaultTimeout,
                                Log = Logger,
-                               CustomContainerConfiguration = new ContainerConfiguration(_containerConfigurations.ToArray())
+                               ContainerConfiguration = new ContainerConfiguration(_containerConfigurations.ToArray())
                            };
 
-            settings.DomainBuilder.Register(_domainConfigurations);
+            foreach (var d in _domainConfigurations)
+                settings.Add(d);
 
             return settings;
         }

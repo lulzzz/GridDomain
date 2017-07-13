@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="BusinessDateTime.cs" />
     <Compile Include="Condition.cs" />
+    <Compile Include="ContainerExtensions.cs" />
     <Compile Include="ICurrentDateTimeStrategy.cs" />
     <Compile Include="DateTimeStrategyHolder.cs" />
     <Compile Include="DefaultDateTimeStrategy.cs" />

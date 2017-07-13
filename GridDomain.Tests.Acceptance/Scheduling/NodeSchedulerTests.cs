@@ -38,7 +38,7 @@ namespace GridDomain.Tests.Acceptance.Scheduling
             protected override NodeSettings CreateNodeSettings()
             {
                 var settings = base.CreateNodeSettings();
-                settings.QuartzJobRetrySettings = new InMemoryRetrySettings(4, TimeSpan.Zero);
+                settings.QuartzConfig.RetryOptions = new InMemoryRetrySettings(4, TimeSpan.Zero);
                 return settings;
             }
         }
@@ -77,15 +77,6 @@ namespace GridDomain.Tests.Acceptance.Scheduling
 
             await Task.Delay(2000);
             Assert.True(ResultHolder.Count == 1);
-        }
-
-        [Fact]
-        public void When_system_resolves_scheduler_Then_single_instance_is_returned_in_all_cases()
-        {
-            var sched1 = Node.Container.Resolve<IScheduler>();
-            var sched2 = Node.Container.Resolve<IScheduler>();
-            var sched3 = Node.Container.Resolve<IScheduler>();
-            Assert.True(sched1 == sched2 && sched2 == sched3);
         }
     }
 }

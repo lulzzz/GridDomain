@@ -1,3 +1,5 @@
+using GridDomain.Common;
+using GridDomain.CQRS.Messaging.Akka;
 using GridDomain.Node;
 using GridDomain.Node.Configuration.Composition;
 using GridDomain.Node.Configuration.Persistence;
@@ -22,7 +24,8 @@ namespace GridDomain.Tests.Unit
             var container = new UnityContainer();
 
             var actorSystem = ActorSystemBuilders[mode]();
-            container.Register(new GridNodeContainerConfiguration(actorSystem, mode, new NodeSettings(null)));
+            NodeSettings settings = new NodeSettings(null);
+            container.Register(new GridNodeContainerConfiguration(new LocalAkkaEventBusTransport(actorSystem), settings.Log));
             actorSystem.Terminate();
             return container;
         }

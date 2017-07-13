@@ -332,8 +332,6 @@
     <Compile Include="Actors\PersistentHub\PersistentHubActor.cs" />
     <Compile Include="AkkaMessaging\CannotFindCorrelationProperty.cs" />
     <Compile Include="AkkaMessaging\CreateHandlerRouteMessage.cs" />
-    <Compile Include="AkkaMessaging\DefaultHandlerActorTypeFactory.cs" />
-    <Compile Include="AkkaMessaging\IHandlerActorTypeFactory.cs" />
     <Compile Include="AkkaMessaging\IncorrectTypeOfCorrelationProperty.cs" />
     <Compile Include="AkkaMessaging\InvalidHandlerType.cs" />
     <Compile Include="Actors\Hadlers\MessageProcessActor.cs" />
@@ -363,7 +361,6 @@
     <Compile Include="Configuration\Akka\Hocon\PersistenceJournalConfig.cs" />
     <Compile Include="Configuration\Akka\Hocon\PersistenceSnapshotConfig.cs" />
     <Compile Include="Configuration\Akka\Hocon\RootConfig.cs" />
-    <Compile Include="Configuration\Composition\ContainerExtensions.cs" />
     <Compile Include="Configuration\Composition\SagaConfiguration.cs" />
     <Compile Include="Configuration\Persistence\IDbConfiguration.cs" />
     <Compile Include="Configuration\Persistence\LocalDbConfiguration.cs" />

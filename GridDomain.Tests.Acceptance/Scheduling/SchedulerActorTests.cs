@@ -6,7 +6,9 @@ using Akka.DI.Core;
 using Akka.DI.Unity;
 using Akka.TestKit.Xunit2;
 using GridDomain.Common;
+using GridDomain.CQRS;
 using GridDomain.CQRS.Messaging;
+using GridDomain.CQRS.Messaging.Akka;
 using GridDomain.Scheduling;
 using GridDomain.Scheduling.Akka;
 using GridDomain.Scheduling.Akka.Messages;
@@ -17,6 +19,7 @@ using GridDomain.Tests.Unit;
 using Microsoft.Practices.Unity;
 using Moq;
 using Serilog;
+using Serilog.Core;
 using Xunit;
 using Xunit.Abstractions;
 using IScheduler = Quartz.IScheduler;
@@ -28,15 +31,23 @@ namespace GridDomain.Tests.Acceptance.Scheduling
         public SchedulerActorTests(ITestOutputHelper helper)
         {
             _container = new UnityContainer();
-            var log = new XUnitAutoTestLoggerConfiguration(helper).CreateLogger();
-            _container.RegisterInstance<ILogger>(log);
-            var publisherMoq = new Mock<IPublisher>();
-            _container.RegisterInstance(publisherMoq.Object);
+            _log = new XUnitAutoTestLoggerConfiguration(helper).CreateLogger();
+            _container.RegisterInstance<ILogger>(_log);
 
-            new SchedulingConfiguration(new PersistedQuartzConfig()).Register(_container);
+            var schedulingExtension = InitSchedulingExtension();
+
             Sys.AddDependencyResolver(new UnityDependencyResolver(_container, Sys));
             _scheduler = Sys.ActorOf(Sys.DI().Props<SchedulingActor>(), nameof(SchedulingActor));
-            _quartzScheduler = _container.Resolve<IScheduler>();
+            _quartzScheduler = schedulingExtension.Scheduler;
+        }
+
+        private SchedulingExtension InitSchedulingExtension()
+        {
+            return Sys.InitSchedulingExtension(new PersistedQuartzConfig(),
+                                               _log,
+                                               new Mock<IPublisher>().Object,
+                                               new Mock<ICommandExecutor>().Object
+                                              );
         }
 
         private const string Name = "test";
@@ -45,6 +56,7 @@ namespace GridDomain.Tests.Acceptance.Scheduling
         private readonly IActorRef _scheduler;
         private IScheduler _quartzScheduler;
         private readonly UnityContainer _container;
+        private Logger _log;
 
         private ExecutionOptions CreateOptions(double seconds,
                                                        TimeSpan? timeout = null,
@@ -73,7 +85,8 @@ namespace GridDomain.Tests.Acceptance.Scheduling
             }
 
             _quartzScheduler.Shutdown(false);
-            _quartzScheduler = _container.Resolve<IScheduler>();
+            //recreate scheduler
+            InitSchedulingExtension();
 
             var taskIds = tasks.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
 

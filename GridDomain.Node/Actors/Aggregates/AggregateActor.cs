@@ -34,7 +34,6 @@ namespace GridDomain.Node.Actors.Aggregates
         private AggregateCommandExecutionContext<TAggregate> ExecutionContext { get; } = new AggregateCommandExecutionContext<TAggregate>();
 
         public AggregateActor(IAggregateCommandsHandler<TAggregate> handler,
-                              IActorRef schedulerActorRef,
                               IPublisher publisher,
                               ISnapshotsPersistencePolicy snapshotsPersistencePolicy,
                               IConstructAggregates aggregateConstructor,

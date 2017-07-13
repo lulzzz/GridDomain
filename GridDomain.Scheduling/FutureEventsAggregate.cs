@@ -7,6 +7,7 @@ using GridDomain.Scheduling.FutureEvents;
 
 namespace GridDomain.Scheduling
 {
+
     public class FutureEventsAggregate : Aggregate
     {
         protected FutureEventsAggregate(Guid id):base(id)

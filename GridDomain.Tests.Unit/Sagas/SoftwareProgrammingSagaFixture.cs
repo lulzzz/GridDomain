@@ -20,7 +20,7 @@ namespace GridDomain.Tests.Unit.Sagas
         {
             _softwareProgrammingSagaDomainConfiguration = new SoftwareProgrammingSagaDomainConfiguration(Logger);
             Add(new BalloonDomainConfiguration());
-            Add(new SchedulingConfiguration(new InMemoryQuartzConfig()));
+            Add(new SchedulingConfiguration(new InMemoryQuartzConfig(),  Logger, Node.Transport, Node));
         }
 
         protected override NodeSettings CreateNodeSettings()
