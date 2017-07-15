@@ -33,7 +33,7 @@ namespace GridDomain.Tests.Unit.CommandPipe
             var testSagaActorÑ =
                 Sys.ActorOf(Props.Create(() => new TestSagaActor(TestActor, null, TimeSpan.FromMilliseconds(50))));
 
-            var catalog = new ProcessorListCatalog();
+            var catalog = new ProcessorListCatalog<ISagaTransitCompleted>();
 
             catalog.Add<BalloonCreated>(new SyncProjectionProcessor(testSagaActorA));
             //two commands per one event will be produced
