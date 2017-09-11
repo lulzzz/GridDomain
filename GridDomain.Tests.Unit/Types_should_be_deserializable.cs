@@ -65,13 +65,13 @@ namespace GridDomain.Tests.Unit
         }
 
         protected override Assembly[] AllAssemblies { get; } = {
-                                                                   Assembly.GetAssembly(typeof(GridDomainNode)),
-                                                                   Assembly.GetAssembly(typeof(SchedulingConfiguration)),
-                                                                   Assembly.GetAssembly(typeof(ProcessReceivedMessage<>)),
-                                                                   Assembly.GetAssembly(typeof(Balloon)),
-                                                                   Assembly.GetAssembly(typeof(IProcessManagerCreatorCatalog<>)),
-                                                                   Assembly.GetAssembly(typeof(DomainEvent)),
-                                                                   Assembly.GetAssembly(typeof(ExecutionOptions))
+                                                                  IntrospectionExtensions.GetTypeInfo(typeof(GridDomainNode)).Assembly,
+                                                                  IntrospectionExtensions.GetTypeInfo(typeof(SchedulingConfiguration)).Assembly,
+                                                                  IntrospectionExtensions.GetTypeInfo(typeof(ProcessReceivedMessage<>)).Assembly,
+                                                                  IntrospectionExtensions.GetTypeInfo(typeof(Balloon)).Assembly,
+                                                                  IntrospectionExtensions.GetTypeInfo(typeof(IProcessManagerCreatorCatalog<>)).Assembly,
+                                                                  IntrospectionExtensions.GetTypeInfo(typeof(DomainEvent)).Assembly,
+                                                                  IntrospectionExtensions.GetTypeInfo(typeof(ExecutionOptions)).Assembly
                                                                };
 
         //aggregates are not serializable itself ! 

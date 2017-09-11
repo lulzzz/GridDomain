@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using System.Reflection;
 using Akka.Actor;
 using GridDomain.Node.Configuration.Akka;

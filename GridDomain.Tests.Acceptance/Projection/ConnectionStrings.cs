@@ -1,4 +1,3 @@
-using System.Configuration;
 using GridDomain.Tests.Common;
 
 namespace GridDomain.Tests.Acceptance.Projection {
@@ -6,8 +5,7 @@ namespace GridDomain.Tests.Acceptance.Projection {
     {
         static ConnectionStrings()
         {
-            AutoTestDb = ConfigurationManager.ConnectionStrings["AutoTestDb"]?.ConnectionString
-                         ??
+            AutoTestDb =
                          new AutoTestLocalDbConfiguration().ReadModelConnectionString;
         }
 
