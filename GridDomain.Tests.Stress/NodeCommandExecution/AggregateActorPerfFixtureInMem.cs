@@ -35,7 +35,7 @@ namespace GridDomain.Tests.Stress.NodeCommandExecution
             _testOutputHelper = output;
             Trace.Listeners.Clear();
             Trace.Listeners.Add(new XunitTraceListener(output));
-
+            //TODO: replace with direct actor creation to avoid projection actor usage
             _fixture = new BalloonFixture
                        {
                            Output = _testOutputHelper,
