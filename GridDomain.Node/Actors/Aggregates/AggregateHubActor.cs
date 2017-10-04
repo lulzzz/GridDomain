@@ -3,13 +3,14 @@ using Akka.Actor;
 using GridDomain.Common;
 using GridDomain.Configuration;
 using GridDomain.CQRS;
+using GridDomain.Node.Actors.Aggregates;
 using GridDomain.Node.Actors.Aggregates.Messages;
 using GridDomain.Node.Actors.PersistentHub;
 using GridDomain.Node.Actors.ProcessManagers.Messages;
 using GridDomain.Node.AkkaMessaging;
 
 namespace GridDomain.Node.Actors.Aggregates
-{e;
+{
     public class AggregateHubActor<TAggregate> : PersistentHubActor where TAggregate : EventSourcing.Aggregate
     {
         public AggregateHubActor(IPersistentChildsRecycleConfiguration conf) : base(conf, typeof(TAggregate).Name)
