@@ -44,10 +44,9 @@ namespace GridDomain.Tests.Unit.CommandPipe
             processPipeActor.Tell(MessageMetadataEnvelop.New<DomainEvent>(new BalloonTitleChanged("2", Guid.NewGuid())));
 
             //first we received complete message from all process actors in undetermined sequence
-            ExpectMsg<ProcessTransited>();
-            ExpectMsg<ProcessTransited>();
-            ExpectMsg<ProcessTransited>();
-
+            FishForMessage<ProcessTransited>(t => true);
+            FishForMessage<ProcessTransited>(t => true);
+            FishForMessage<ProcessTransited>(t => true);
             //after all process managers complets, process pipe actor should notify sender (TestActor) of initial messages that work is done
             
             //process managers pipe actor should send all produced commands to execution actor
