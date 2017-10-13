@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using Akka.Actor;
 
-namespace GridDomain.Node
+namespace GridDomain.Cluster
 {
-    public class AkkaCluster : IDisposable
+    public class GridDomainCluster : IDisposable
     {
         public ActorSystem[] NonSeedNodes;
         public ActorSystem[] SeedNodes;

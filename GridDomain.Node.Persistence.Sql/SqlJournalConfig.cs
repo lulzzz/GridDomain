@@ -4,16 +4,16 @@ using GridDomain.Node.Configuration.Hocon;
 
 namespace GridDomain.Node.Persistence.Sql
 {
-    internal class PersistenceJournalConfig : IHoconConfig
+    internal class SqlJournalConfig : IHoconConfig
     {
         private readonly ISqlNodeDbConfiguration _dbConfiguration;
         private readonly IHoconConfig _eventAdatpersConfig;
         private readonly Type _sqlJournalType;
         private string _assemblyQualifiedShortName;
 
-        public PersistenceJournalConfig(ISqlNodeDbConfiguration dbConfiguration,
-                                        IHoconConfig eventAdatpersConfig,
-                                        Type sqlJournalType = null)
+        public SqlJournalConfig(ISqlNodeDbConfiguration dbConfiguration,
+                                IHoconConfig eventAdatpersConfig,
+                                Type sqlJournalType = null)
         {
             _eventAdatpersConfig = eventAdatpersConfig;
             _dbConfiguration = dbConfiguration;

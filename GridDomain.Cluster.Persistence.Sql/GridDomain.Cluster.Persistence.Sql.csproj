@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GridDomain.Cluster\GridDomain.Cluster.csproj" />
+    <ProjectReference Include="..\GridDomain.Node.Persistence.Sql\GridDomain.Node.Persistence.Sql.csproj" />
+    <ProjectReference Include="..\GridDomain.Node\GridDomain.Node.csproj" />
+  </ItemGroup>
+
+</Project>

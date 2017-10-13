@@ -33,6 +33,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridDomain.Transport", "Gri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GridDomain.Node.Persistence.Sql", "GridDomain.Node.Persistence.Sql\GridDomain.Node.Persistence.Sql.csproj", "{334DBDCC-BF94-4787-93DA-8AA29956A861}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.Cluster", "GridDomain.Cluster\GridDomain.Cluster.csproj", "{761F8CF7-CFF0-4406-BB54-636F4652AC6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.Cluster.Persistence.Sql", "GridDomain.Cluster.Persistence.Sql\GridDomain.Cluster.Persistence.Sql.csproj", "{F96D0717-F27C-4AC2-A8CB-0C7A746A9A82}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +103,14 @@ Global
 		{334DBDCC-BF94-4787-93DA-8AA29956A861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{334DBDCC-BF94-4787-93DA-8AA29956A861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{334DBDCC-BF94-4787-93DA-8AA29956A861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{761F8CF7-CFF0-4406-BB54-636F4652AC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{761F8CF7-CFF0-4406-BB54-636F4652AC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{761F8CF7-CFF0-4406-BB54-636F4652AC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{761F8CF7-CFF0-4406-BB54-636F4652AC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F96D0717-F27C-4AC2-A8CB-0C7A746A9A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F96D0717-F27C-4AC2-A8CB-0C7A746A9A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F96D0717-F27C-4AC2-A8CB-0C7A746A9A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F96D0717-F27C-4AC2-A8CB-0C7A746A9A82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

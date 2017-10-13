@@ -461,7 +461,7 @@
     <Compile Include="ProcessManagers\SoftwareProgrammingDomain\Slept.cs" />
     <Compile Include="ProcessManagers\SoftwareProgrammingDomain\SoftwareProgrammingProcess.cs" />
     <Compile Include="ProcessManagers\SoftwareProgrammingDomain\SoftwareProgrammingState.cs" />
-    <Compile Include="ProcessManagers\SoftwareProgrammingDomain\SoftwareProgrammingProcessManagerFactory.cs" />
+    <Compile Include="ProcessManagers\SoftwareProgrammingDomain\SoftwareProgrammingProcessStateFactory.cs" />
     <Compile Include="ProcessManagers\SoftwareProgrammingDomain\UndefinedCoffeMachineException.cs" />
     <Compile Include="BalloonFixture.cs" />
     <Compile Include="BalloonDomain\Commands\PlanBallonBlowCommand.cs" />

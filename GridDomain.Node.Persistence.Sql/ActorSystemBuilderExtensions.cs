@@ -8,7 +8,7 @@ namespace GridDomain.Node.Persistence.Sql
     {
         public static ActorSystemBuilder SqlPersistence(this ActorSystemBuilder builder, ISqlNodeDbConfiguration conf)
         {
-            builder.Add(new PersistenceConfig(new PersistenceJournalConfig(conf ?? throw new ArgumentNullException(nameof(conf)),
+            builder.Add(new PersistenceConfig(new SqlJournalConfig(conf ?? throw new ArgumentNullException(nameof(conf)),
                                                                            new DomainEventAdaptersConfig()),
                                               new PersistenceSnapshotConfig(conf)));
             return builder;
