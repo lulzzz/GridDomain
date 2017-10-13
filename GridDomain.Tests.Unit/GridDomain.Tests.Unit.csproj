@@ -515,6 +515,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GridDomain.Cluster.Persistence.Sql\GridDomain.Cluster.Persistence.Sql.csproj">
+      <Project>{f96d0717-f27c-4ac2-a8cb-0c7a746a9a82}</Project>
+      <Name>GridDomain.Cluster.Persistence.Sql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GridDomain.Common\GridDomain.Common.csproj">
       <Project>{ab9bb393-1874-4421-a78a-55d9977a6173}</Project>
       <Name>GridDomain.Common</Name>
@@ -569,6 +573,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.7.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Cluster\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
