@@ -21,14 +21,13 @@ namespace GridDomain.Tests.Unit.ProcessManagers
 
         }
         
-        public SoftwareProgrammingProcessManagerFixture InitSnapshots(int keep = 1,
+        public SoftwareProgrammingProcessManagerFixture InitSnapshots(int eventsToKeep = 1,
                                                             TimeSpan? maxSaveFrequency = null,
                                                             int saveOnEach = 1)
         {
             var processStateDependencyFactory = ProcessConfiguration.SoftwareProgrammingProcessManagerDependenciesFactory
                                                                     .StateDependencyFactory;
-            processStateDependencyFactory.SnapshotPolicyCreator = () => new SnapshotsPersistencePolicy(saveOnEach, keep, maxSaveFrequency);
-          //  processStateDependencyFactory.SnapshotsFactoryCreator = () => 
+            processStateDependencyFactory.SnapshotPolicyCreator = () => new SnapshotsPersistencePolicy(saveOnEach, eventsToKeep, maxSaveFrequency);
             return this;
         }
     }
